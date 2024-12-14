@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rizzcord</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #36393f;
+            color: white;
+        }
+        .app {
+            display: flex;
+            height: 100vh;
+        }
+        .sidebar {
+            width: 20%;
+            background-color: #2f3136;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 0;
+        }
+        .server {
+            background-color: #5865f2;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .server:hover {
+            cursor: pointer;
+            background-color: #4752c4;
+        }
+        .chat-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-header {
+            padding: 10px;
+            background-color: #202225;
+            border-bottom: 1px solid #2f3136;
+        }
+        .chat-messages {
+            flex-grow: 1;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        .chat-messages .message {
+            margin-bottom: 10px;
+        }
+        .chat-messages .message .user {
+            font-weight: bold;
+        }
+        .chat-messages .message .text {
+            margin-left: 5px;
+        }
+        .chat-input {
+            display: flex;
+            padding: 10px;
+            background-color: #40444b;
+            border-top: 1px solid #2f3136;
+        }
+        .chat-input input {
+            flex-grow: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+        }
+        .chat-input button {
+            margin-left: 10px;
+            padding: 10px;
+            background-color: #5865f2;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+        .chat-input button:hover {
+            background-color: #4752c4;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <div class="sidebar">
+            <div class="server">A</div>
+            <div class="server">B</div>
+            <div class="server">C</div>
+        </div>
+        <div class="chat-container">
+            <div class="chat-header">
+                #general
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                <!-- Messages will be dynamically added here -->
+            </div>
+            <div class="chat-input">
+                <input type="text" id="message-input" placeholder="Type a message...">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Socket.IO from CDN -->
+   <script>
+    // Select chat message container
+    const chatMessages = document.getElementById('chat-messages');
+
+    // Function to send messages
+    function sendMessage() {
+        const input = document.getElementById('message-input');
+        const messageText = input.value;
+
+        // Debugging: Check if input is empty
+        if (messageText.trim() === '') {
+            console.log('Empty message, ignoring.');
+            return;
+        }
+
+        // Debugging: Log the message
+        console.log('Message sent:', messageText);
+
+        // Create a message element
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message');
+        messageElement.innerHTML = `
+            <span class="user">You:</span>
+            <span class="text">${messageText}</span>
+        `;
+        chatMessages.appendChild(messageElement);
+
+        // Scroll to the latest message
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        // Clear the input field
+        input.value = '';
+    }
+
+    // Add event listener for the Enter key
+    document.getElementById('message-input').addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            sendMessage();
+        }
+    });
+
+    // Debugging: Indicate that the script is loaded
+    console.log('Chat application initialized successfully.');
+</script>
+
+</body>
+</html>
